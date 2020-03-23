@@ -45,7 +45,7 @@ RegionManager::addRegion(Store* store, char* region, uint64_t region_size, char*
     removeRegion(region);
   }
 
-  if ( m_active_regions.empty() ) {
+  if ( !m_uffd ) {
     UMAP_LOG(Debug, "No active regions, initializing engine");
     m_buffer = new Buffer();
     m_uffd = new Uffd();
@@ -87,12 +87,14 @@ RegionManager::removeRegion( char* region )
 
   m_last_iter = m_active_regions.end();
 
-  if ( m_active_regions.empty() ) {
-    delete m_evict_manager; m_evict_manager = nullptr;
-    delete m_fill_workers; m_fill_workers = nullptr;
-    delete m_uffd; m_uffd = nullptr;
-    delete m_buffer; m_buffer = nullptr;
-  }
+  // I don't see why the engine cannot remain initialized.
+  // TODO: Move to destructor
+//  if ( m_active_regions.empty() ) {
+//    delete m_evict_manager; m_evict_manager = nullptr;
+//    delete m_fill_workers; m_fill_workers = nullptr;
+//    delete m_uffd; m_uffd = nullptr;
+//    delete m_buffer; m_buffer = nullptr;
+//  }
 }
 
 int 

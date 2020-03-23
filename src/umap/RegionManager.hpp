@@ -85,7 +85,7 @@ class RegionManager {
     int m_evict_high_water_threshold;
     uint64_t m_max_fault_events;
     Buffer* m_buffer;
-    Uffd* m_uffd;
+    Uffd* m_uffd = nullptr;
     FillWorkers* m_fill_workers;
     EvictManager* m_evict_manager;
     std::mutex m_mutex;
