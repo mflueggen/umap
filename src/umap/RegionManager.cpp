@@ -39,6 +39,12 @@ RegionManager::addRegion(Store* store, char* region, uint64_t region_size, char*
 {
   std::lock_guard<std::mutex> lock(m_mutex);
 
+  auto rd = new RegionDescriptor(region, region_size, mmap_region, mmap_region_size, store);
+  const auto active_region = m_active_regions.find((void*)region);
+  if (active_region != m_active_regions.cend()) {
+    removeRegion(region);
+  }
+
   if ( m_active_regions.empty() ) {
     UMAP_LOG(Debug, "No active regions, initializing engine");
     m_buffer = new Buffer();
@@ -47,7 +53,6 @@ RegionManager::addRegion(Store* store, char* region, uint64_t region_size, char*
     m_evict_manager = new EvictManager();
   }
 
-  auto rd = new RegionDescriptor(region, region_size, mmap_region, mmap_region_size, store);
   m_active_regions[(void*)region] = rd;
 
   UMAP_LOG(Debug,
