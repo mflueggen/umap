@@ -98,7 +98,7 @@ void
 RegionManager::removeRegion( char* region )
 {
   std::lock_guard<std::mutex> lock(m_mutex);
-  _removeRegion(region)
+  _removeRegion(region);
 }
 
 int 
