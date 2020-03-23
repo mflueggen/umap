@@ -34,7 +34,7 @@ umap(
       << ", flags: " << flags
       << ", offset: " << offset
   );
-  return Umap::umap_ex(region_addr, region_size, prot, flags, fd, 0, nullptr);
+  return Umap::umap_ex(region_addr, region_size, prot, flags, fd, offset, nullptr);
 }
 
 int
@@ -191,7 +191,7 @@ umap_ex(
   umap_region = (void*)((uint64_t)umap_region & ~(umap_psize - 1));
 
   if ( store == nullptr )
-    store = Store::make_store(umap_region, umap_size, umap_psize, fd);
+    store = Store::make_store(umap_region, umap_size, umap_psize, fd, offset);
 
   rm.addRegion(store, (char*)umap_region, umap_size, (char*)mmap_region, mmap_size);
 

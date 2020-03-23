@@ -13,7 +13,7 @@
 namespace Umap {
   class StoreFile : public Store {
     public:
-      StoreFile(void* _region_, size_t _rsize_, size_t _alignsize_, int _fd_);
+      StoreFile(void* _region_, size_t _rsize_, size_t _alignsize_, int _fd_, size_t _file_offset_);
 
       ssize_t read_from_store(char* buf, size_t nb, off_t off);
       ssize_t  write_to_store(char* buf, size_t nb, off_t off);
@@ -22,6 +22,7 @@ namespace Umap {
       void* alignment_buffer;
       size_t rsize;
       size_t alignsize;
+      size_t file_offset;
       int fd;
   };
 }

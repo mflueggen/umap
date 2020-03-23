@@ -27,6 +27,7 @@
 //
 // The UFFDIO_COPY_MODE_WP is only defined in later versions of Linux (>5.0)
 //
+//#define UFFDIO_COPY_MODE_WP
 #ifndef UFFDIO_COPY_MODE_WP
 #define UMAP_RO_MODE
 #endif

@@ -15,8 +15,8 @@
 #include "umap/util/Macros.hpp"
 
 namespace Umap {
-  StoreFile::StoreFile(void* _region_, size_t _rsize_, size_t _alignsize_, int _fd_)
-    : region{_region_}, rsize{_rsize_}, alignsize{_alignsize_}, fd{_fd_}
+  StoreFile::StoreFile(void* _region_, size_t _rsize_, size_t _alignsize_, int _fd_, size_t _file_offset_)
+    : region{_region_}, rsize{_rsize_}, alignsize{_alignsize_}, fd{_fd_}, file_offset{_file_offset_}
   {
     UMAP_LOG(Debug,
         "region: " << region << " rsize: " << rsize
@@ -28,9 +28,9 @@ namespace Umap {
     size_t rval = 0;
 
     UMAP_LOG(Debug, "pread(fd=" << fd << ", buf=" << (void*)buf
-                    << ", nb=" << nb << ", off=" << off << ")";);
+                    << ", nb=" << nb << ", off=" << off << ", file_offset=" << file_offset << ")";);
 
-    rval = pread(fd, buf, nb, off);
+    rval = pread(fd, buf, nb, off + file_offset);
 
     if (rval == -1) {
       int eno = errno;
@@ -48,7 +48,7 @@ namespace Umap {
     UMAP_LOG(Debug, "pwrite(fd=" << fd << ", buf=" << (void*)buf
                     << ", nb=" << nb << ", off=" << off << ")";);
 
-    rval = pwrite(fd, buf, nb, off);
+    rval = pwrite(fd, buf, nb, off + file_offset);
     if (rval == -1) {
       int eno = errno;
       UMAP_ERROR("pwrite(fd=" << fd << ", buf=" << (void*)buf
