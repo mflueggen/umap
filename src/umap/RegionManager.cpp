@@ -42,7 +42,7 @@ RegionManager::addRegion(Store* store, char* region, uint64_t region_size, char*
   auto rd = new RegionDescriptor(region, region_size, mmap_region, mmap_region_size, store);
   const auto active_region = m_active_regions.find((void*)region);
   if (active_region != m_active_regions.cend()) {
-    removeRegion(region);
+    _removeRegion(region);
   }
 
   if ( !m_uffd ) {
@@ -65,19 +65,16 @@ RegionManager::addRegion(Store* store, char* region, uint64_t region_size, char*
   m_last_iter = m_active_regions.end();
 }
 
-void
-RegionManager::removeRegion( char* region )
-{
-  std::lock_guard<std::mutex> lock(m_mutex);
+void RegionManager::_removeRegion( char* region ) {
   auto it = m_active_regions.find(region);
 
   if (it == m_active_regions.end())
-    UMAP_ERROR("umap fault monitor not found for: " << (void*)region);
+  UMAP_ERROR("umap fault monitor not found for: " << (void*)region);
 
   UMAP_LOG(Debug,
-      "region: " << (void*)(it->second->start()) << " - " << (void*)(it->second->end())
-      << ", region_size: " << it->second->size()
-      << ", number of regions: " << m_active_regions.size()
+           "region: " << (void*)(it->second->start()) << " - " << (void*)(it->second->end())
+                      << ", region_size: " << it->second->size()
+                      << ", number of regions: " << m_active_regions.size()
   );
 
   m_uffd->unregister_region(it->second);
@@ -95,6 +92,13 @@ RegionManager::removeRegion( char* region )
 //    delete m_uffd; m_uffd = nullptr;
 //    delete m_buffer; m_buffer = nullptr;
 //  }
+}
+
+void
+RegionManager::removeRegion( char* region )
+{
+  std::lock_guard<std::mutex> lock(m_mutex);
+  _removeRegion(region)
 }
 
 int 

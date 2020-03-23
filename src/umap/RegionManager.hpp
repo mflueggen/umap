@@ -55,7 +55,7 @@ class RegionManager {
 
     int flush_buffer();
     void prefetch(int npages, umap_prefetch_item* page_array);
-    void removeRegion( char* mmap_region );
+    void removeRegion( char* region );
     Version  get_umap_version( void ) { return m_version; }
     long     get_system_page_size( void ) { return m_system_page_size; }
     uint64_t get_max_pages_in_buffer( void ) { return m_max_pages_in_buffer; }
@@ -96,6 +96,7 @@ class RegionManager {
     RegionManager( void );
 
     uint64_t* read_env_var( const char* env, uint64_t* val);
+    void _removeRegion( char* region );
     uint64_t        get_max_pages_in_memory( void );
     void set_max_fault_events( uint64_t max_events );
     void set_max_pages_in_buffer( uint64_t max_pages );
